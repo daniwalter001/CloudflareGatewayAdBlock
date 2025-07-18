@@ -31,7 +31,7 @@ class App:
             for p in cf_policies:
                 self.logger.info(f"Deleting policy {p['name']}")
                 cloudflare.delete_gateway_policy(p["id"])
-                
+
             # delete the lists
             for l in cf_lists:
                 self.logger.info(f"Deleting list {l['name']}")
@@ -59,7 +59,9 @@ class App:
         if len(cf_policies) == 0:
             self.logger.info("Creating firewall policy")
 
-            cf_policies = cloudflare.create_gateway_policy(f"{self.name_prefix} Block Ads", [l["id"] for l in cf_lists])
+            cf_policies = cloudflare.create_gateway_policy(
+                f"{self.name_prefix} Block Ads", [l["id"] for l in cf_lists]
+            )
 
         elif len(cf_policies) != 1:
             self.logger.error("More than one firewall policy found")
@@ -69,7 +71,11 @@ class App:
         else:
             self.logger.info("Updating firewall policy")
 
-            cloudflare.update_gateway_policy(f"{self.name_prefix} Block Ads", cf_policies[0]["id"], [l["id"] for l in cf_lists])
+            cloudflare.update_gateway_policy(
+                f"{self.name_prefix} Block Ads",
+                cf_policies[0]["id"],
+                [l["id"] for l in cf_lists],
+            )
 
         self.logger.info("Done")
 
